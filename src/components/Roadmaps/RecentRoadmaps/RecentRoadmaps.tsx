@@ -28,8 +28,7 @@ export const RecentRoadmaps = () => {
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
-
-
+  const token = localStorage.getItem('userToken');
 
   // const token = getToken();
   // console.log('Token: ',token);
@@ -41,7 +40,8 @@ export const RecentRoadmaps = () => {
         const response = await fetch("https://p9m3dl.deta.dev/roadmap/all/", {
           method: "GET",
           headers: {
-            'Access-Control-Allow-Origin': '*'
+            'Access-Control-Allow-Origin': '*',
+            'token': `${token}`
           },
         })
         const json = await response.json();

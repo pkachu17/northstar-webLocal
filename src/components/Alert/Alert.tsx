@@ -19,7 +19,7 @@ export default function ActionAlerts(props) {
                 horizontal: 'center',
             }}
             >
-                <Alert onClose={() => props.onCloseAlert()}>Roadmap successfully added to your learning list!</Alert>
+                <Alert onClose={() => props.onClose()}>Roadmap successfully added to your learning list!</Alert>
         </Popover>
       
   );

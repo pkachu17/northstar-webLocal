@@ -43,6 +43,7 @@ export const BoardArea = (props) => {
   
 
   const isBigScreen = useMediaQuery('(min-width:600px)');
+  const token = localStorage.getItem('userToken');
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -114,7 +115,8 @@ export const BoardArea = (props) => {
       const response = await fetch(`https://p9m3dl.deta.dev/roadmap/papers${boardId}`, {
         method: "GET",
         headers: {
-          "Access-Control-Allow-Origin": "*"
+          "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
         },
       });
       const json = await response.json();
@@ -178,6 +180,7 @@ export const BoardArea = (props) => {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
         },
       });
       const json = await response.json();
@@ -190,10 +193,10 @@ export const BoardArea = (props) => {
   };
 
   const updateLevel = async () => {
-    let token = localStorage.getItem('userToken');
+    const headers = {'token': `${token}`};
     const postData = {...board, 'levels': boardLevels+1}
     const response = await axios.put(`https://p9m3dl.deta.dev/roadmap`, postData,
-    {params: { roadmap_id: boardId }} );
+    {params: { roadmap_id: boardId }, headers});
     try {
       if (response.status === 200) {
         console.log(` You have updated: ${JSON.stringify(response.data)}`);
@@ -208,8 +211,8 @@ export const BoardArea = (props) => {
 
   const deleteRoadmap = async (boardId) => {
     let token = localStorage.getItem('userToken');
-    const headers = {'token': token};
-    const response = await axios.delete(`https://p9m3dl.deta.dev/roadmap/${boardId}`);
+    const headers = {'token': `${token}`};
+    const response = await axios.delete(`https://p9m3dl.deta.dev/roadmap/${boardId}`, {headers});
     try {
       if (response.status === 200) {
         console.log(` You have deleted: ${JSON.stringify(response.data)}`);
@@ -240,9 +243,9 @@ export const BoardArea = (props) => {
       rating: newRating
     }
     let token = localStorage.getItem('userToken');
-    const headers = {'token': token};
+    const headers = {'token': `${token}`};
     console.log(postData);
-    await axios.post(`https://p9m3dl.deta.dev/roadmap/rating`, postData, { params: { roadmap_id: boardId }})
+    await axios.post(`https://p9m3dl.deta.dev/roadmap/rating`, postData, { params: { roadmap_id: boardId }, headers})
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);
@@ -265,11 +268,11 @@ export const BoardArea = (props) => {
 
   const addToLearningList = (boardId) => {
     let token = localStorage.getItem('userToken');
-    const headers = {'token': token};
-    return axios.post('https://p9m3dl.deta.dev/user/learning_list', {params: {
+    const headers = {'token': `${token}`};
+    return axios.post('https://p9m3dl.deta.dev/user/learning_list', {}, {params: {
       roadmap_id: boardId,
       user_email: 'jinjun@gmail.com'
-    }})
+    }, headers})
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);
@@ -284,8 +287,8 @@ export const BoardArea = (props) => {
 
   const cloneRoadmap = (boardId) => {
     let token = localStorage.getItem('userToken');
-    const headers = {'token': token};
-    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, { params: { user_email: 'jinjun@gmail.com', roadmap_id: boardId } })
+    const headers = {'token': `${token}`};
+    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, {}, { params: { user_email: 'jinjun@gmail.com', roadmap_id: boardId }, headers })
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);
@@ -300,8 +303,8 @@ export const BoardArea = (props) => {
 
   const deleteTask = async (paperId) => {
     let token = localStorage.getItem('userToken');
-    const headers = {'token': token};
-    const response = await axios.delete(`https://p9m3dl.deta.dev/paper/${paperId}`);
+    const headers = {'token': `${token}`};
+    const response = await axios.delete(`https://p9m3dl.deta.dev/paper/${paperId}`, {}, {headers});
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);

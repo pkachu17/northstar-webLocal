@@ -44,13 +44,15 @@ export const AddPaper = ({ show, boardId, onClose }) => {
       ],
       "link": link
     };
+    let token = localStorage.getItem('userToken');
+    const headers = {'token': `${token}`};
 
-    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails);
+    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails, {headers});
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
         onClose();
-        window.location.reload();
+        // window.location.reload();
       } else {
         throw new Error("An error has occurred");
       }

@@ -43,6 +43,7 @@ export const CreateRoadmap = () => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("New roadmap");
   const [error, setError] = useState(false);
+  const token = localStorage.getItem('userToken');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -58,7 +59,7 @@ export const CreateRoadmap = () => {
     };
     const newBoardId = await addNewBoard(postData);
 
-    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData);
+    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData, {headers: {'token': token}});
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
@@ -69,7 +70,7 @@ export const CreateRoadmap = () => {
     } catch (error) {
       console.log("An error has occurred");
     }
-    history.push(`${Routes.boards}/${newBoardId}`, postData);
+    // history.push(`${Routes.boards}/${newBoardId}`, postData);
   };
 
   return (

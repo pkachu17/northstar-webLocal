@@ -27,7 +27,8 @@ export const LearningRoadmaps = () => {
   const history = useHistory();
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
   // const [learningList, setLearningList] = useState(Array);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("userToken");
+  const headers = {'token': `${token}`}
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export const LearningRoadmaps = () => {
             let learningBoards = Array();
             let promiseArr = Array();
             response.data.data.learning_list.map(roadmap => {
-              promiseArr.push(axios.get(`https://p9m3dl.deta.dev/roadmap/info${roadmap}`)
+              promiseArr.push(axios.get(`https://p9m3dl.deta.dev/roadmap/info${roadmap}`, {headers})
                 .then(resp => {
                   console.log("Response : ", resp.data);
                   return resp.data
