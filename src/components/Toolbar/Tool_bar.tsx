@@ -61,7 +61,7 @@ export const Tool_bar = (props: Props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const container = window !== undefined ? () => window().document.body : undefined;
-  const navItems = [{ id: 0, title: 'Create', to: '/create' }, { id: 1, title: 'Explore', to: '/explore' }, { id: 0, title: 'My Learnings', to: '/learnings' }];
+  const navItems = [{ id: 0, title: 'Create', to: '/create' }, { id: 1, title: 'Explore', to: '/explore' }, { id: 2, title: 'My Learnings', to: '/learning' }, { id: 3, title: 'Sign Out', to: 'SignOut' }];
   const drawerWidth = 240;
 
   const handleDrawerToggle = () => {

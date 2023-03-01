@@ -1,5 +1,5 @@
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Grow, TextField } from '@material-ui/core';
-import { Toolbar } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, Grow, TextField } from '@material-ui/core';
+import { Box, Toolbar } from '@mui/material';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { addNewBoard } from '../../../service/roadmaps';
@@ -9,6 +9,11 @@ import './CreateRoadmap.css';
 import ChipInputAutosuggest from "./ChipInputAutosuggest";
 import { Alert } from '@material-ui/lab';
 import axios from 'axios';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 export const CreateRoadmap = () => {
   const suggestions = [
     "machine Learning",
@@ -33,11 +38,12 @@ export const CreateRoadmap = () => {
   const [roadmapName, setRoadmapName] = useState('');
   const [createdBy, setCreatedBy] = useState('Jinjun Xiong');
   const [createdByEmail, setCreatedByEmail] = useState("jinjun@gmail.com");
-  const [levels, setLevels] = useState(Number);
+  const [levels, setLevels] = useState(1);
   const [tags, setTags] = useState<any>([]);
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("New roadmap");
   const [error, setError] = useState(false);
+  const token = localStorage.getItem('userToken');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -53,7 +59,7 @@ export const CreateRoadmap = () => {
     };
     const newBoardId = await addNewBoard(postData);
 
-    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData);
+    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData, {headers: {'token': `${token}`}});
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
@@ -64,7 +70,7 @@ export const CreateRoadmap = () => {
     } catch (error) {
       console.log("An error has occurred");
     }
-    history.push(`${Routes.boards}/${newBoardId}`, postData);
+    // history.push(`${Routes.boards}/${newBoardId}`, postData);
   };
 
   return (
@@ -94,26 +100,6 @@ export const CreateRoadmap = () => {
                     variant='outlined'
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setRoadmapName(event.target.value)}
                   />
-                  <TextField
-                    className='CreateBoardTextField'
-                    required
-                    id='filled-required'
-                    label='Levels'
-                    placeholder='Enter the number of levels'
-                    defaultValue={levels}
-                    variant='outlined'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setLevels(parseInt(event.target.value))}
-                  />
-                  {/* <TextField
-              className='CreateBoardTextField'
-              required
-              id='filled-required'
-              label='Tags'
-              placeholder='Enter relevant tags'
-              defaultValue={tags}
-              variant='outlined'
-              onChange={(event: ChangeEvent<HTMLInputElement>) => setTags(event.target.value)}
-            /> */}
                   <ChipInputAutosuggest data={suggestions} />
                 </CardContent>
                 <CardActions className='CreateBoardCardAction'>

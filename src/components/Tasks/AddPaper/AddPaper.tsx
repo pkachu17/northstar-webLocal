@@ -8,6 +8,10 @@ import { Status } from "../../../types/status";
 import "./AddPaper.css";
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 export interface AddPaperProps {
   boardId: string;
@@ -40,13 +44,15 @@ export const AddPaper = ({ show, boardId, onClose }) => {
       ],
       "link": link
     };
+    let token = localStorage.getItem('userToken');
+    const headers = {'token': `${token}`};
 
-    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails);
+    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails, {headers});
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
         onClose();
-        window.location.reload();
+        // window.location.reload();
       } else {
         throw new Error("An error has occurred");
       }
@@ -67,6 +73,7 @@ export const AddPaper = ({ show, boardId, onClose }) => {
               <TextField
                 className="AddTaskTextField"
                 required
+                style={{marginBottom:'20px'}}
                 id="filled-required"
                 label="Paper Name"
                 placeholder="Enter the article name"
@@ -78,22 +85,41 @@ export const AddPaper = ({ show, boardId, onClose }) => {
                 className="AddTaskTextField"
                 required
                 id="filled-required"
+                style={{marginBottom:'20px'}}
                 label="Link to Paper"
                 placeholder="Enter URL"
                 defaultValue={link}
                 variant="outlined"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => setLink(event.target.value)}
               />
-              <TextField
+              {/* <TextField
                 className="AddTaskTextField"
                 required
                 id="paper-level-input"
+                style={{marginBottom:'20px'}}
                 label="Paper Level"
                 placeholder="Enter the level"
                 defaultValue={taskLevel}
                 variant="outlined"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => setTaskLevel(parseInt(event.target.value))}
-              />
+              /> */}
+              <FormControl className="AddTaskTextField">
+                    <InputLabel id="demo-simple-select-label">Enter the number of levels</InputLabel>
+                    <Select
+                      required
+                      labelId="demo-simple-select-label"
+                      id="paper-level-input"
+                      value={taskLevel}
+                      label="Paper Level"
+                      variant="outlined"
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setTaskLevel(parseInt(event.target.value))}
+                    >
+                      <MenuItem value={1}>1</MenuItem>
+                      <MenuItem value={2}>2</MenuItem>
+                      <MenuItem value={3}>3</MenuItem>
+                      <MenuItem value={4}>4</MenuItem>
+                    </Select>
+                  </FormControl>
             </CardContent>
             <CardActions className="AddTaskCardAction">
               <Button type="submit" variant="contained" color="primary" className="AddTaskButton">
