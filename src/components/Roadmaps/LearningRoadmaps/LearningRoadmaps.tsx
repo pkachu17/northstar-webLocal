@@ -35,7 +35,7 @@ export const LearningRoadmaps = () => {
     setLoading(true);
     async function fetchData() {
 
-      return axios.get(`https://p9m3dl.deta.dev/user/learning_list?user_email=jinjun@gmail.com`)
+      return axios.get(`https://p9m3dl.deta.dev/user/learning_list?user_email=jinjun@gmail.com`, {headers})
         .then(response => {
           if (response.status === 200) {
             console.log(` You have fetched: ${JSON.stringify(response.data)}`);

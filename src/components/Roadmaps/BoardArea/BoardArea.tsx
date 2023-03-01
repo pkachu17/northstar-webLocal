@@ -17,9 +17,9 @@ import StarIcon from '@mui/icons-material/Star';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ActionAlerts from '../../Alert/Alert';
 import Alert from '@mui/material/Alert';
 import Popover from '@mui/material/Popover';
+import { ActionAlerts } from '../../Alert/Alert';
 const pdfIcon = require("../../../assets/icons/pdf-file-9-128.jpeg");
 
 interface BoardAreaProps {
@@ -538,7 +538,7 @@ export const BoardArea = (props) => {
             </Fade>
             {showAddTask && <AddPaper show={showAddTask} onClose={() => setShowAddTask(false)} boardId={boardId}></AddPaper>}
             {successAlert && 
-            // <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
+              // <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
               <Popover 
               open
               anchorReference="anchorPosition"

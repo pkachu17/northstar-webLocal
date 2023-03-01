@@ -4,23 +4,25 @@ import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-export default function ActionAlerts(props) {
+export const ActionAlerts = (props) => {
   return (
-        <Popover 
-            open
-            anchorReference="anchorPosition"
-            anchorPosition={{ top: 200, left: 400 }}
-            anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
-            }}
-            transformOrigin={{
-                vertical: 'center',
-                horizontal: 'center',
-            }}
-            >
-                <Alert onClose={() => props.onClose()}>Roadmap successfully added to your learning list!</Alert>
-        </Popover>
+            <Popover 
+              open
+              anchorReference="anchorPosition"
+              anchorPosition={{ top: 500, left: 400 }}
+              anchorOrigin={{
+                  vertical: 'center',
+                  horizontal: 'center',
+              }}
+              transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'center',
+              }}
+              >
+                <Alert onClose={props.onCloseAlert()}>Roadmap successfully added to your learning list!</Alert>
+          </Popover>
       
   );
 }
+
+export default ActionAlerts;
