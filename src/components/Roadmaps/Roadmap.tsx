@@ -8,6 +8,7 @@ import "./Roadmap.css";
 
 export const RoadmapComponent = (props) => {
   let { id } = useParams<{ id: string }>();
+  let token = localStorage.getItem('userToken');
 
   const history = useHistory();
   var str = history.location.pathname.substring(1, history.location.pathname.length);
@@ -22,6 +23,7 @@ export const RoadmapComponent = (props) => {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
         },
       });
       const json = await response.json();
@@ -42,7 +44,7 @@ export const RoadmapComponent = (props) => {
 
   return (
     <>
-      <BoardArea boardId={id} />
+      <BoardArea boardId={id} inLearningList={props.inLearningList} />
     </>
   );
 };

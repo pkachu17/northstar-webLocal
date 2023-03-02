@@ -39,6 +39,7 @@ export const CreateRoadmap = () => {
   const [description, setDescription] = useState("New roadmap");
   const [error, setError] = useState(false);
   let token = localStorage.getItem("userToken");
+  const userEmail = localStorage.getItem('token');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -100,26 +101,6 @@ export const CreateRoadmap = () => {
                     variant='outlined'
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setRoadmapName(event.target.value)}
                   />
-                  <TextField
-                    className='CreateBoardTextField'
-                    required
-                    id='filled-required'
-                    label='Levels'
-                    placeholder='Enter the number of levels'
-                    defaultValue={levels}
-                    variant='outlined'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setLevels(parseInt(event.target.value))}
-                  />
-                  {/* <TextField
-              className='CreateBoardTextField'
-              required
-              id='filled-required'
-              label='Tags'
-              placeholder='Enter relevant tags'
-              defaultValue={tags}
-              variant='outlined'
-              onChange={(event: ChangeEvent<HTMLInputElement>) => setTags(event.target.value)}
-            /> */}
                   <ChipInputAutosuggest data={suggestions} />
                 </CardContent>
                 <CardActions className='CreateBoardCardAction'>

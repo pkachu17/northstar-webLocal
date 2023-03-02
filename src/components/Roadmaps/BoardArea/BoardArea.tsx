@@ -1,5 +1,5 @@
 
-import { Typography, Box, useMediaQuery, Button, Fade } from '@mui/material';
+import { Typography, Box, useMediaQuery, Button, Fade, TextField } from '@mui/material';
 import React, { useState, useEffect } from "react";
 import { Roadmap } from "../../../types/roadmap";
 import { AddPaper } from "../../Tasks/AddPaper/AddPaper";
@@ -17,6 +17,9 @@ import StarIcon from '@mui/icons-material/Star';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Alert from '@mui/material/Alert';
+import Popover from '@mui/material/Popover';
+import { ActionAlerts } from '../../Alert/Alert';
 const pdfIcon = require("../../../assets/icons/pdf-file-9-128.jpeg");
 
 interface BoardAreaProps {
@@ -36,14 +39,16 @@ export const BoardArea = (props) => {
   const [boardLevels, setBoardLevels] = useState(0);
   const [alert, setAlert] = useState('');
   const [referencedWorks, setReferencedWorks] = useState(Array);
+  const [successAlert, setSuccessAlert] = React.useState(false);
+
 
   const isBigScreen = useMediaQuery('(min-width:600px)');
+  const token = localStorage.getItem('userToken');
+  const userEmail = localStorage.getItem('token');
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  let token = localStorage.getItem("userToken");
 
   const history = useHistory();
   console.log(boardId)
@@ -164,7 +169,6 @@ export const BoardArea = (props) => {
       // setColumns(cols);
       // setData({"columns": cols})
       // }
-
       return json.roadmap_papers;
     } catch (error) {
       console.log(error);
@@ -189,13 +193,27 @@ export const BoardArea = (props) => {
     }
   };
 
-  const deleteRoadmap = async (boardId) => {
-    const response = await axios.delete("https://p9m3dl.deta.dev/roadmap/" + `${boardId}`, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "token": `${token}`
+  const updateLevel = async () => {
+    const headers = { 'token': `${token}` };
+    const postData = { ...board, 'levels': boardLevels + 1 }
+    const response = await axios.put(`https://p9m3dl.deta.dev/roadmap`, postData,
+      { params: { roadmap_id: boardId }, headers });
+    try {
+      if (response.status === 200) {
+        console.log(` You have updated: ${JSON.stringify(response.data)}`);
+        fetchBoard(boardId)
+      } else {
+        throw new Error("An error has occurred");
       }
-    });
+    } catch (error) {
+      console.log("An error has occurred");
+    }
+  };
+
+  const deleteRoadmap = async (boardId) => {
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+    const response = await axios.delete(`https://p9m3dl.deta.dev/roadmap/${boardId}`, { headers });
     try {
       if (response.status === 200) {
         console.log(` You have deleted: ${JSON.stringify(response.data)}`);
@@ -225,8 +243,10 @@ export const BoardArea = (props) => {
     const postData = {
       rating: newRating
     }
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
     console.log(postData);
-    await axios.post(`https://p9m3dl.deta.dev/roadmap/rating`, postData, { params: { roadmap_id: boardId } })
+    await axios.post(`https://p9m3dl.deta.dev/roadmap/rating`, postData, { params: { roadmap_id: boardId }, headers })
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);
@@ -240,21 +260,48 @@ export const BoardArea = (props) => {
 
   const renderTabs = () => {
     let tabs = Array();
+    let levelNames = ['Beginner', 'Intermediate', 'Advanced'];
     for (let i = 0; i < boardLevels; i++) {
-      tabs.push(<Tab label={`Level ${i + 1}`} {...a11yProps(i + 1)} />)
+      tabs.push(<Tab label={levelNames[i]} {...a11yProps(i + 1)} />)
     }
     return tabs;
   }
 
   const addToLearningList = (boardId) => {
-    const postData = {
-      roadmap_id: boardId
-    }
-    return axios.post(`https://p9m3dl.deta.dev/user/learning_list`, postData, { params: { user_email: 'jinjun@gmail.com' } })
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+    return axios.post('https://p9m3dl.deta.dev/user/learning_list', {}, {
+      params: {
+        roadmap_id: boardId,
+        user_email: userEmail
+      }, headers
+    })
       .then(response => {
         if (response.status === 200) {
-          console.log(` You have modified: ${JSON.stringify(response.data)}`);
-          fetchBoard(boardId);
+          console.log(` You have added to learning list: ${JSON.stringify(response.data)}`);
+          setSuccessAlert(true);
+          // fetchBoard(boardId);
+        } else {
+          throw new Error("An error has occurred");
+        }
+      }
+      )
+  }
+
+  const deleteFromLearningList = (boardId) => {
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+    return axios.delete('https://p9m3dl.deta.dev/user/learning_list', {
+      params: {
+        roadmap_id: boardId,
+        user_email: userEmail
+      }, headers
+    })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(` You have deleted: ${JSON.stringify(response.data)}`);
+          setSuccessAlert(true);
+          history.push(Routes.learning);
         } else {
           throw new Error("An error has occurred");
         }
@@ -263,7 +310,9 @@ export const BoardArea = (props) => {
   }
 
   const cloneRoadmap = (boardId) => {
-    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, {}, { params: { user_email: 'jinjun@gmail.com', roadmap_id: boardId } })
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, {}, { params: { user_email: userEmail, roadmap_id: boardId }, headers })
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);
@@ -277,7 +326,9 @@ export const BoardArea = (props) => {
   }
 
   const deleteTask = async (paperId) => {
-    const response = await axios.delete(`https://p9m3dl.deta.dev/paper/${paperId}`);
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+    const response = await axios.delete(`https://p9m3dl.deta.dev/paper/${paperId}`, { headers });
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
@@ -289,6 +340,34 @@ export const BoardArea = (props) => {
       console.log("An error has occurred");
     }
   }
+
+  const renderAlert = () => {
+    return <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
+  }
+
+  // const updateTask = async(updatedName) =>{
+  //   setName(updatedName);
+  //   const payload = {
+  //     "name": updatedName,
+  //     // "description": board.description,
+  //     "rating": board.rating,
+  //     "author": "string",
+  //     "tags": board?.tags,
+  //     "levels": 0,
+  //     "public": true
+  //   }
+  //   const response = await axios.delete(`https://p9m3dl.deta.dev/roadmap/${boardId}`, payload);
+  //   try {
+  //     if (response.status === 200) {
+  //       console.log(` You have updated: ${JSON.stringify(response.data)}`);
+  //       window.location.reload();
+  //     } else {
+  //       throw new Error("An error has occurred");
+  //     }
+  //   } catch (error) {
+  //     console.log("An error has occurred");
+  //   }
+  // }
 
   useEffect(() => {
     async function fetchData() {
@@ -327,9 +406,14 @@ export const BoardArea = (props) => {
               <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => setShowAddTask(true)}>
                 Add Paper
               </Button>
-              <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => addToLearningList(boardId)}>
-                Add to my learning list
-              </Button>
+              {props.inLearningList ?
+                <Button startIcon={<DeleteForeverOutlined />} color="primary" onClick={() => deleteFromLearningList(boardId)}>
+                  Delete from learning list
+                </Button> :
+                <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => addToLearningList(boardId)}>
+                  Add to my learning list
+                </Button>
+              }
               <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => cloneRoadmap(boardId)}>
                 Clone
               </Button>
@@ -343,6 +427,9 @@ export const BoardArea = (props) => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     {renderTabs()}
+                    {boardLevels < 3 ? <Button onClick={updateLevel} >
+                      <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                    </Button> : null}
                   </Tabs>
                 </Box>
                 <Box style={{ maxHeight: '60vh', overflowY: 'scroll' }}>
@@ -375,10 +462,11 @@ export const BoardArea = (props) => {
                           </Box>
                         </CardActionArea>
                       </Card>
-
-                    ) : <Typography variant="h5" component="div">
-                      No papers found
-                    </Typography>}
+                    ) :
+                      <Typography variant="h5" component="div">
+                        No papers found
+                      </Typography>
+                    }
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     {columns[1] ? columns[1].cards.map(card =>
@@ -473,14 +561,35 @@ export const BoardArea = (props) => {
                           </Box>
                         </CardActionArea>
                       </Card>
-                    ) : <Typography variant="h5" component="div">
-                      No papers found
-                    </Typography>}
+                    ) :
+                      <Typography variant="h5" component="div">
+                        No papers found
+                      </Typography>}
                   </TabPanel>
                 </Box>
               </div>
             </Fade>
             {showAddTask && <AddPaper show={showAddTask} onClose={() => setShowAddTask(false)} boardId={boardId}></AddPaper>}
+            {successAlert &&
+              renderAlert()
+              // <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
+              //     <Popover 
+              //     open
+              //     anchorReference="anchorPosition"
+
+              //     anchorPosition={{ top: 500, left: 400 }}
+              //     anchorOrigin={{
+              //         vertical: 'center',
+              //         horizontal: 'center',
+              //     }}
+              //     transformOrigin={{
+              //         vertical: 'center',
+              //         horizontal: 'center',
+              //     }}
+              //     >
+              //         <Alert onClose={() => setSuccessAlert(false)}>Roadmap successfully added to your learning list!</Alert>
+              // </Popover>
+            }
           </Box>
         )}
       </Box>
@@ -489,5 +598,4 @@ export const BoardArea = (props) => {
 };
 
 export default BoardArea;
-
 

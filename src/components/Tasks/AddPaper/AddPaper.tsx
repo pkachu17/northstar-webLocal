@@ -41,7 +41,10 @@ export const AddPaper = ({ show, boardId, onClose }) => {
       "link": link
     };
 
-    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails);
+    let token = localStorage.getItem('userToken');
+    const headers = { 'token': `${token}` };
+
+    const response = await axios.post(` https://p9m3dl.deta.dev/paper`, paperDetails, { headers });
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);
