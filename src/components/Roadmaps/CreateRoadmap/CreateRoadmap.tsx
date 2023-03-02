@@ -37,13 +37,13 @@ export const CreateRoadmap = () => {
   const history = useHistory();
   const [roadmapName, setRoadmapName] = useState('');
   const [createdBy, setCreatedBy] = useState('Jinjun Xiong');
-  const [createdByEmail, setCreatedByEmail] = useState("jinjun@gmail.com");
   const [levels, setLevels] = useState(1);
   const [tags, setTags] = useState<any>([]);
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("New roadmap");
   const [error, setError] = useState(false);
   const token = localStorage.getItem('userToken');
+  const userEmail = localStorage.getItem('token');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -54,7 +54,7 @@ export const CreateRoadmap = () => {
       "description": description,
       "rating": rating,
       "author": createdBy,
-      "email": createdByEmail,
+      "email": userEmail ? userEmail : '',
       "public": true
     };
     const newBoardId = await addNewBoard(postData);

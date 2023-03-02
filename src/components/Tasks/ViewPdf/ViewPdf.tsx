@@ -15,6 +15,7 @@ export function ViewPdf(props) {
   const [paperLink, setPaperLink] = useState('');
   const history = useHistory();
   const location = useLocation();
+  let token = localStorage.getItem('userToken');
 
   const setData = [
     {
@@ -52,6 +53,10 @@ export function ViewPdf(props) {
     try {
       const response = await fetch(`https://p9m3dl.deta.dev/paper/info${props.location.state.card.id}/${props.location.state.boardId}`, {
         method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
+        },
       });
       const json = await response.json();
       setPapersData(json);

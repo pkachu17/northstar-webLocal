@@ -44,6 +44,7 @@ export const BoardArea = (props) => {
 
   const isBigScreen = useMediaQuery('(min-width:600px)');
   const token = localStorage.getItem('userToken');
+  const userEmail = localStorage.getItem('token');
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -271,7 +272,7 @@ export const BoardArea = (props) => {
     const headers = {'token': `${token}`};
     return axios.post('https://p9m3dl.deta.dev/user/learning_list', {}, {params: {
       roadmap_id: boardId,
-      user_email: 'jinjun@gmail.com'
+      user_email: userEmail
     }, headers})
       .then(response => {
         if (response.status === 200) {
@@ -290,7 +291,7 @@ export const BoardArea = (props) => {
     const headers = {'token': `${token}`};
     return axios.delete('https://p9m3dl.deta.dev/user/learning_list', {params: {
       roadmap_id: boardId,
-      user_email: 'jinjun@gmail.com'
+      user_email: userEmail
     }, headers})
       .then(response => {
         if (response.status === 200) {
@@ -307,7 +308,7 @@ export const BoardArea = (props) => {
   const cloneRoadmap = (boardId) => {
     let token = localStorage.getItem('userToken');
     const headers = {'token': `${token}`};
-    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, {}, { params: { user_email: 'jinjun@gmail.com', roadmap_id: boardId }, headers })
+    return axios.post(`https://p9m3dl.deta.dev/roadmap/clone`, {}, { params: { user_email: userEmail, roadmap_id: boardId }, headers })
       .then(response => {
         if (response.status === 200) {
           console.log(` You have modified: ${JSON.stringify(response.data)}`);

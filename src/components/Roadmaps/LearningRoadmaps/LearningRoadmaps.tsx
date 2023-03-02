@@ -28,6 +28,7 @@ export const LearningRoadmaps = () => {
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
   // const [learningList, setLearningList] = useState(Array);
   const token = localStorage.getItem("userToken");
+  const userEmail = localStorage.getItem("token")
   const headers = {'token': `${token}`}
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +36,9 @@ export const LearningRoadmaps = () => {
     setLoading(true);
     async function fetchData() {
 
-      return axios.get(`https://p9m3dl.deta.dev/user/learning_list?user_email=jinjun@gmail.com`, {headers})
+      return axios.get(`https://p9m3dl.deta.dev/user/learning_list`, { params: {
+        user_email: userEmail
+      }, headers})
         .then(response => {
           if (response.status === 200) {
             console.log(` You have fetched: ${JSON.stringify(response.data)}`);
