@@ -43,6 +43,8 @@ export const BoardArea = (props) => {
     setValue(newValue);
   };
 
+  let token = localStorage.getItem("userToken");
+
   const history = useHistory();
   console.log(boardId)
   console.log(papers)
@@ -110,6 +112,7 @@ export const BoardArea = (props) => {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
         },
       });
       const json = await response.json();
@@ -174,6 +177,7 @@ export const BoardArea = (props) => {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "token": `${token}`
         },
       });
       const json = await response.json();
@@ -186,7 +190,12 @@ export const BoardArea = (props) => {
   };
 
   const deleteRoadmap = async (boardId) => {
-    const response = await axios.delete(`https://p9m3dl.deta.dev/roadmap/${boardId}`);
+    const response = await axios.delete("https://p9m3dl.deta.dev/roadmap/" + `${boardId}`, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "token": `${token}`
+      }
+    });
     try {
       if (response.status === 200) {
         console.log(` You have deleted: ${JSON.stringify(response.data)}`);

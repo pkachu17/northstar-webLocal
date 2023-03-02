@@ -12,48 +12,31 @@ import { sampleTasks } from "../../service/sampleTasks";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import { useHistory } from "react-router-dom";
+import SearchHome from "./SearchHome";
+import HeroHomepage from "./HeroHomepage";
+import TopRatedRoadMaps from "./TopRatedRoadMaps";
+import RoadMapsTopics from "./RoadMapsTopics";
+import MyRoadMaps from "./MyRoadMaps";
+import RoadMapsByAuthors from "./RoadMapsByAuthors";
 
 export const HomePage = () => {
 
   const [user, loading, error] = useAuthState(auth);
   //user?.getIdToken().then(data => localStorage.setItem("userToken", data));
-  console.log("This is the user token", localStorage.getItem("userToken"));
+  // console.log("This is the user token", localStorage.getItem("userToken"));
 
-  const setData = [
-    {
-      name: "Machine Learning Basics",
-      createdBy: "ML, AI",
-      createdAt: "2022-06-24T03:55:16.121Z",
-      id: "0",
-      tasks: sampleTasks,
-    },
-  ];
-  localStorage.setItem("boards", JSON.stringify(setData));
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   return (
     <>
       <Toolbar />
-      <div className="HomePageContainer">
-        <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
-          <Grid container item sm={12} lg={9} justify="center" alignItems="center" spacing={3}>
-            <Grid item sm={12} lg={6}>
-              <Slide direction="down" in={true} timeout={1000}>
-                <div>
-                  <Typography variant="h5"></Typography>
-                  <img
-                    alt="React Northstar App"
-                    style={{ height: "400px", width: "500px", transform: isSmallScreen ? "scale(0.5)" : "none" }}
-                    src={LandingImage}
-                  ></img>
-                  <Typography variant="subtitle1">Create custom roadmaps and publish for fellow learners</Typography>
-                </div>
-              </Slide>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
+      <SearchHome />
+      <HeroHomepage />
+      <TopRatedRoadMaps />
+      <RoadMapsTopics />
+      <MyRoadMaps />
+      <RoadMapsByAuthors />
       <Footer />
     </>
   );

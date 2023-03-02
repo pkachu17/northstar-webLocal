@@ -38,6 +38,7 @@ export const CreateRoadmap = () => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("New roadmap");
   const [error, setError] = useState(false);
+  let token = localStorage.getItem("userToken");
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -53,7 +54,12 @@ export const CreateRoadmap = () => {
     };
     const newBoardId = await addNewBoard(postData);
 
-    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData);
+    const response = await axios.post(`https://p9m3dl.deta.dev/roadmap`, postData, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "token": `${token}`
+      },
+    });
     try {
       if (response.status === 200) {
         console.log(` You have created: ${JSON.stringify(response.data)}`);

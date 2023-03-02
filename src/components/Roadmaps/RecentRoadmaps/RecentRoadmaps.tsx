@@ -36,10 +36,12 @@ export const RecentRoadmaps = () => {
   useEffect(() => {
     async function fetchData() {
       try {
+        let token = localStorage.getItem("userToken");
         const response = await fetch("https://p9m3dl.deta.dev/roadmap/all/", {
           method: "GET",
           headers: {
-            'Access-Control-Allow-Origin': '*'
+            'Access-Control-Allow-Origin': '*',
+            'token': `${token}`
           },
         })
         const json = await response.json();
