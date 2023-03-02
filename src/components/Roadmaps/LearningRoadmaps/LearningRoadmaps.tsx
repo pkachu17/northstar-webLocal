@@ -27,12 +27,20 @@ export const LearningRoadmaps = () => {
   const history = useHistory();
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
   // const [learningList, setLearningList] = useState(Array);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("userToken");
+  const userEmail = localStorage.getItem("token")
+  const headers = { 'token': `${token}` }
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     async function fetchData() {
 
-      return axios.get(`https://p9m3dl.deta.dev/user/learning_list?user_email=jinjun@gmail.com`)
+      return axios.get(`https://p9m3dl.deta.dev/user/learning_list`, {
+        params: {
+          user_email: userEmail
+        }, headers
+      })
         .then(response => {
           if (response.status === 200) {
             console.log(` You have fetched: ${JSON.stringify(response.data)}`);
@@ -40,7 +48,7 @@ export const LearningRoadmaps = () => {
             let learningBoards = Array();
             let promiseArr = Array();
             response.data.data.learning_list.map(roadmap => {
-              promiseArr.push(axios.get(`https://p9m3dl.deta.dev/roadmap/info${roadmap}`)
+              promiseArr.push(axios.get(`https://p9m3dl.deta.dev/roadmap/info${roadmap}`, { headers })
                 .then(resp => {
                   console.log("Response : ", resp.data);
                   return resp.data
@@ -55,6 +63,7 @@ export const LearningRoadmaps = () => {
               learningBoards.push(res.filter(r => r != undefined))
               console.log(learningBoards)
               setRecentBoards(learningBoards[0])
+              setLoading(false);
             }).catch(err => {
               console.log("Error exists:", err)
             })
@@ -79,7 +88,7 @@ export const LearningRoadmaps = () => {
   };
 
   const openRoadmap = (board) => {
-    history.push(`${Routes.boards}/${board.uid}`, board);
+    history.push({ pathname: `${Routes.boards}/${board.uid}`, state: { board: board, inLearningList: true } });
   };
 
   return (
@@ -87,27 +96,27 @@ export const LearningRoadmaps = () => {
       <Toolbar />
       <Grow in={true} timeout={1000}>
         <div className="ccard">
-
-          {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>}
-          {recentBoards && recentBoards.length > 0 && (
-            <div className="ccardbox">
-              {recentBoards.map((recentBoard) => (
-                <div
-                  className="dcard"
-                  style={getBackground(Math.floor(Math.random() * 5))}
-                  onClick={() => openRoadmap(recentBoard)}
-                >
-                  <div className="fpart">
-                    <img src={getIllustration(Math.floor(Math.random() * 3))} />
+          {loading ? <>Loading...</> :
+            // {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>}
+            recentBoards && recentBoards.length > 0 && (
+              <div className="ccardbox">
+                {recentBoards.map((recentBoard) => (
+                  <div
+                    className="dcard"
+                    style={getBackground(Math.floor(Math.random() * 5))}
+                    onClick={() => openRoadmap(recentBoard)}
+                  >
+                    <div className="fpart">
+                      <img src={getIllustration(Math.floor(Math.random() * 3))} />
+                    </div>
+                    <div className="spart">{recentBoard.name}</div>
+                    <Button className="spart2" startIcon={<PersonPinIcon />} style={{ textTransform: "none" }}>
+                      {recentBoard.author}
+                    </Button>
                   </div>
-                  <div className="spart">{recentBoard.name}</div>
-                  <Button className="spart2" startIcon={<PersonPinIcon />} style={{ textTransform: "none" }}>
-                    {recentBoard.author}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
         </div>
       </Grow>
     </>
