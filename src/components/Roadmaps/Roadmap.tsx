@@ -39,7 +39,7 @@ export const RoadmapComponent = (props) => {
 
   return (
     <>
-      <BoardArea boardId={id} />
+      <BoardArea boardId={id} inLearningList={props.inLearningList}/>
     </>
   );
 };

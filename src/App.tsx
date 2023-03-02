@@ -11,8 +11,6 @@ import "./App.css";
 import { ViewPdf } from "./components/Tasks/ViewPdf/ViewPdf";
 import { CreateRoadmap } from "./components/Roadmaps/CreateRoadmap/CreateRoadmap";
 import { RecentRoadmaps } from "./components/Roadmaps/RecentRoadmaps/RecentRoadmaps";
-import { RoadmapComponent } from "./components/Roadmaps/Roadmap";
-import BoardArea from "./components/Roadmaps/BoardArea/BoardArea";
 import { NewPaper } from "./components/Tasks/AddPaper/NewPaper";
 import LandingPage from "./pages/LandingPage/components/LandingPage";
 import { LearningRoadmaps } from "./components/Roadmaps/LearningRoadmaps/LearningRoadmaps";

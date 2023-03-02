@@ -26,7 +26,6 @@ import { auth, getToken } from '../../../firebase';
 export const RecentRoadmaps = () => {
   const history = useHistory();
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('userToken');
 
@@ -66,7 +65,7 @@ export const RecentRoadmaps = () => {
   };
 
   const openRoadmap = (board) => {
-    history.push(`${Routes.boards}/${board.uid}`, board);
+    history.push({pathname: `${Routes.boards}/${board.uid}`, state: {board: board, inLearningList: false }});
   };
 
   return (

@@ -83,7 +83,7 @@ export const LearningRoadmaps = () => {
   };
 
   const openRoadmap = (board) => {
-    history.push(`${Routes.boards}/${board.uid}`, board);
+    history.push({pathname: `${Routes.boards}/${board.uid}`, state: {board: board, inLearningList: true }});
   };
 
   return (

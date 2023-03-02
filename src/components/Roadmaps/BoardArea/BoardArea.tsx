@@ -275,9 +275,28 @@ export const BoardArea = (props) => {
     }, headers})
       .then(response => {
         if (response.status === 200) {
-          console.log(` You have modified: ${JSON.stringify(response.data)}`);
+          console.log(` You have added to learning list: ${JSON.stringify(response.data)}`);
           setSuccessAlert(true);
           // fetchBoard(boardId);
+        } else {
+          throw new Error("An error has occurred");
+        }
+      }
+      )
+  }
+
+  const deleteFromLearningList = (boardId) => {
+    let token = localStorage.getItem('userToken');
+    const headers = {'token': `${token}`};
+    return axios.delete('https://p9m3dl.deta.dev/user/learning_list', {params: {
+      roadmap_id: boardId,
+      user_email: 'jinjun@gmail.com'
+    }, headers})
+      .then(response => {
+        if (response.status === 200) {
+          console.log(` You have deleted: ${JSON.stringify(response.data)}`);
+          setSuccessAlert(true);
+          history.push(Routes.learning);
         } else {
           throw new Error("An error has occurred");
         }
@@ -315,6 +334,10 @@ export const BoardArea = (props) => {
     } catch (error) {
       console.log("An error has occurred");
     }
+  }
+
+  const renderAlert = () => {
+    return  <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
   }
 
   // const updateTask = async(updatedName) =>{
@@ -378,9 +401,14 @@ export const BoardArea = (props) => {
               <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => setShowAddTask(true)}>
                 Add Paper
               </Button>
-              <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => addToLearningList(boardId)}>
+              {props.inLearningList ? 
+              <Button startIcon={<DeleteForeverOutlined />} color="primary" onClick={() => deleteFromLearningList(boardId)}>
+              Delete from learning list
+            </Button> :
+                <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => addToLearningList(boardId)}>
                 Add to my learning list
               </Button>
+              }
               <Button startIcon={<AddCircleOutlineIcon />} color="primary" onClick={() => cloneRoadmap(boardId)}>
                 Clone
               </Button>
@@ -538,23 +566,24 @@ export const BoardArea = (props) => {
             </Fade>
             {showAddTask && <AddPaper show={showAddTask} onClose={() => setShowAddTask(false)} boardId={boardId}></AddPaper>}
             {successAlert && 
+              renderAlert()
               // <ActionAlerts onCloseAlert={setSuccessAlert(false)}></ActionAlerts>
-              <Popover 
-              open
-              anchorReference="anchorPosition"
+          //     <Popover 
+          //     open
+          //     anchorReference="anchorPosition"
               
-              anchorPosition={{ top: 500, left: 400 }}
-              anchorOrigin={{
-                  vertical: 'center',
-                  horizontal: 'center',
-              }}
-              transformOrigin={{
-                  vertical: 'center',
-                  horizontal: 'center',
-              }}
-              >
-                  <Alert onClose={() => setSuccessAlert(false)}>Roadmap successfully added to your learning list!</Alert>
-          </Popover>
+          //     anchorPosition={{ top: 500, left: 400 }}
+          //     anchorOrigin={{
+          //         vertical: 'center',
+          //         horizontal: 'center',
+          //     }}
+          //     transformOrigin={{
+          //         vertical: 'center',
+          //         horizontal: 'center',
+          //     }}
+          //     >
+          //         <Alert onClose={() => setSuccessAlert(false)}>Roadmap successfully added to your learning list!</Alert>
+          // </Popover>
             }
             </Box>
         )}
