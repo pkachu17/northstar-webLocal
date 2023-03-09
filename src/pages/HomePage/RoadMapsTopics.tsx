@@ -83,7 +83,7 @@ const RoadMapsTopics = () => {
                         sx={{ width: '200px', fontSize: '16px', marginTop: '20px' }}
                         onClick={() => { history.push('/Register') }}
                     >
-                        Find All
+                        Explore More
                     </Button>
                 </Grid>
             </Grid>

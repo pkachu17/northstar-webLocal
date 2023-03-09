@@ -1,4 +1,4 @@
-import { Divider, Grid, Slide, Typography, useMediaQuery, useTheme } from "@material-ui/core";
+import { Box, Divider, Grid, Slide, Typography, useMediaQuery, useTheme } from "@material-ui/core";
 import { Toolbar } from "@mui/material";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
@@ -29,16 +29,16 @@ export const HomePage = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
 
   return (
-    <>
+    <Box>
       <Toolbar />
-      <SearchHome />
+      {/* <SearchHome />  Moved to tool_bar */}
       <HeroHomepage />
       <TopRatedRoadMaps />
       <RoadMapsTopics />
       <MyRoadMaps />
       <RoadMapsByAuthors />
       <Footer />
-    </>
+    </Box>
   );
 };
 

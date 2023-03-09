@@ -22,6 +22,7 @@ import { getIllustration, getBackground } from '../../../utils';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import './RecentRoadmaps.css';
 import { auth, getToken } from '../../../firebase';
+import CardArea from '../../../pages/HomePage/CardArea';
 
 export const RecentRoadmaps = () => {
   const history = useHistory();
@@ -71,9 +72,11 @@ export const RecentRoadmaps = () => {
   return (
     <>
       <Toolbar />
+      <Toolbar />
       <Grow in={true} timeout={1000}>
         <div className="ccard">
-          {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>}
+          {/* {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>} */}
+          <CardArea />
           {recentBoards && recentBoards.length > 0 && (
             <div className="ccardbox">
               {recentBoards.map((recentBoard) => (

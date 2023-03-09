@@ -12,7 +12,7 @@ const HeroHomepage = () => {
 
     return (
 
-        <Box style={{ paddingLeft: isBigScreen ? '10%' : '5%', paddingRight: isBigScreen ? '10%' : '5%', paddingBottom: '5%', paddingTop: '0%' }}>
+        <Box style={{ paddingLeft: isBigScreen ? '10%' : '5%', paddingRight: isBigScreen ? '10%' : '5%', paddingBottom: '5%', paddingTop: '0%', marginTop: "80px" }}>
             <Grid container spacing={0} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Grid item xs={isBigScreen ? 5 : 12}>
                     <img src={HomeImage} alt="HomeImage" width="80%" object-fit="cover" />
@@ -34,10 +34,24 @@ const HeroHomepage = () => {
                     </Typography>
                     <Button
                         variant="contained"
-                        sx={{ width: '200px', fontSize: '16px', marginTop: '20px' }}
+                        sx={{ width: '200px', fontSize: '16px', margin: '30px' }}
                         onClick={() => { history.push('/create') }}
                     >
                         Create
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ width: '200px', fontSize: '16px', margin: '30px' }}
+                        onClick={() => { history.push('/explore') }}
+                    >
+                        Explore
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ width: '200px', fontSize: '16px', margin: '30px' }}
+                        onClick={() => { history.push('/learnings') }}
+                    >
+                        My Learnings
                     </Button>
                 </Grid>
             </Grid>

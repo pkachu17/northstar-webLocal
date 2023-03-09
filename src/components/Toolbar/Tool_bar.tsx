@@ -19,6 +19,7 @@ import { CardActionArea } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import "./Tool_bar.css";
+import SearchHome from "../../pages/HomePage/SearchHome";
 const LogoImage = require('./../../images/icon.png');
 const userIcon = require('../../assets/icons/user.png');
 const kidIcon = require("../../assets/icons/kid.png");
@@ -167,11 +168,12 @@ export const Tool_bar = (props: Props) => {
               </div>
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {navItems.map((item, key) => (
+              <SearchHome />
+              {/* {navItems.map((item, key) => (
                 <Button variant='outlined' key={item.title} onClick={() => { if (item.to === "SignOut") { localStorage.removeItem("userToken"); logout(); } else history.push(item.to) }} sx={{ color: '#000000', borderColor: 'black', marginX: '10px' }}>
                   {item.title}
                 </Button>
-              ))}
+              ))} */}
             </Box>
             <IconButton
               color="inherit"
