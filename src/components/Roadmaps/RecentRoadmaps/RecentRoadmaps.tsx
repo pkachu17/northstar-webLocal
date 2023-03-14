@@ -1,38 +1,14 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grow,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Button
-} from '@material-ui/core';
+import { Grow } from '@material-ui/core';
 import { Toolbar } from "@mui/material";
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { getBoards } from '../../../service/roadmaps';
-import { Routes } from '../../../service/config';
+import { useEffect, useState } from 'react';
 import { Roadmap } from '../../../types/roadmap';
-import { getIllustration, getBackground } from '../../../utils';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
 import './RecentRoadmaps.css';
-import { auth, getToken } from '../../../firebase';
-import CardArea from '../../../pages/HomePage/CardArea';
+import CardArea from '../../Card/CardArea';
+import Spinners from '../../Spinners/Spinners';
 
 export const RecentRoadmaps = () => {
-  const history = useHistory();
+
   const [recentBoards, setRecentBoards] = useState<Roadmap[] | undefined>(undefined);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-
-
-  // const token = getToken();
-  // console.log('Token: ',token);
 
   useEffect(() => {
     async function fetchData() {
@@ -65,34 +41,17 @@ export const RecentRoadmaps = () => {
     return false;
   };
 
-  const openRoadmap = (board) => {
-    history.push(`${Routes.boards}/${board.uid}`, board);
-  };
-
   return (
     <>
       <Toolbar />
       <Toolbar />
       <Grow in={true} timeout={1000}>
         <div className="ccard">
-          {/* {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>} */}
-          <CardArea />
+          {isEmptyRecentBoards() && <Spinners />}
           {recentBoards && recentBoards.length > 0 && (
             <div className="ccardbox">
               {recentBoards.map((recentBoard) => (
-                <div
-                  className="dcard"
-                  style={getBackground(Math.floor(Math.random() * 5))}
-                  onClick={() => openRoadmap(recentBoard)}
-                >
-                  <div className="fpart">
-                    <img src={getIllustration(Math.floor(Math.random() * 3))} />
-                  </div>
-                  <div className="spart">{recentBoard.name}</div>
-                  <Button className="spart2" startIcon={<PersonPinIcon />} style={{ textTransform: "none" }}>
-                    {recentBoard.author}
-                  </Button>
-                </div>
+                <CardArea props={recentBoard} />
               ))}
             </div>
           )}

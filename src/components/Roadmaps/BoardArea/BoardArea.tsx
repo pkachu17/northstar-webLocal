@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
 import Popover from '@mui/material/Popover';
 import { ActionAlerts } from '../../Alert/Alert';
+import Spinners from '../../Spinners/Spinners';
 const pdfIcon = require("../../../assets/icons/pdf-file-9-128.jpeg");
 
 interface BoardAreaProps {
@@ -381,10 +382,22 @@ export const BoardArea = (props) => {
     console.log(content);
     <><PaperCard boardId={boardId} task={content}></PaperCard></>;
   }
+
+  const isEmptyRecentBoards = (): boolean => {
+    if (!board) {
+      return true;
+    }
+    if (board && Object.keys(board).length == 0) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       <Toolbar />
       <Box style={{ width: '100%', paddingTop: "60px" }}>
+        {isEmptyRecentBoards() && <Spinners />}
         {board && Object.keys(board).length > 0 && (
           <Box style={{ width: '100%', paddingLeft: isBigScreen ? '10%' : '5%', paddingRight: isBigScreen ? '10%' : '5%' }}>
             <Box>

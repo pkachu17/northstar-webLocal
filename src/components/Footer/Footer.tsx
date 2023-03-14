@@ -1,6 +1,6 @@
 import { Divider, Link, Slide, Typography } from '@material-ui/core';
+import { Box } from '@mui/material';
 import CopyrightIcon from '@material-ui/icons/Copyright';
-import React from 'react';
 import './Footer.css';
 import GithubIcon from '@material-ui/icons/GitHub';
 
@@ -20,7 +20,7 @@ export const Footer = () => {
           <Divider orientation='vertical' flexItem></Divider>
           <div className='FooterItemContainer'>
             <Typography color='textSecondary' variant='body2'>
-              Feedback: northstar@buffalo.edu
+              northstar@buffalo.edu
             </Typography>
           </div>
 

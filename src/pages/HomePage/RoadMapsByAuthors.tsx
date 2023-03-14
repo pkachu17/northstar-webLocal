@@ -5,6 +5,8 @@ import { Roadmap } from '../../types/roadmap';
 import { getIllustration, getBackground } from '../../utils';
 import { useHistory } from "react-router-dom";
 import { Toolbar } from '@material-ui/core';
+import Spinners from '../../components/Spinners/Spinners';
+import CardArea from '../../components/Card/CardArea';
 
 const RoadMapsByAuthors = () => {
 
@@ -49,31 +51,19 @@ const RoadMapsByAuthors = () => {
 
 
     return (
-        <Box style={{ paddingLeft: isBigScreen ? '10%' : '5%', paddingRight: isBigScreen ? '10%' : '5%', paddingBottom: '5%', paddingTop: '0%' }}>
+        <Box style={{ paddingBottom: '5%', paddingTop: '0%' }}>
             <Grid container spacing={0} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Grid item xs={isBigScreen ? 12 : 12}>
-                    <Typography variant={isBigScreen ? "h4" : "h5"} fontWeight={700} style={isBigScreen ? {} : { textAlign: 'center' }} >
+                    {/* <Typography variant={isBigScreen ? "h4" : "h5"} fontWeight={700} style={isBigScreen ? {} : { textAlign: 'center' }} >
                         RoadMaps by Authors
-                    </Typography>
-                    <Grow style={{ paddingTop: '20px' }} in={true} timeout={1000}>
+                    </Typography> */}
+                    <Grow style={{ paddingTop: '20px', minHeight: '300px' }} in={true} timeout={1000}>
                         <div className="ccard">
-                            {isEmptyRecentBoards() && <Typography variant="body2">No roadmaps found</Typography>}
+                            {isEmptyRecentBoards() && <Spinners />}
                             {recentBoards && recentBoards.length > 0 && (
                                 <div className="ccardbox">
                                     {recentBoards.slice(0, 4).map((recentBoard) => (
-                                        <div
-                                            className="dcard"
-                                            style={getBackground(Math.floor(Math.random() * 5))}
-                                            onClick={() => openRoadmap(recentBoard)}
-                                        >
-                                            <div className="fpart">
-                                                <img src={getIllustration(Math.floor(Math.random() * 3))} />
-                                            </div>
-                                            <div className="spart">{recentBoard.name}</div>
-                                            <Button className="spart2" startIcon={<PersonPinIcon />} style={{ textTransform: "none" }}>
-                                                {recentBoard.author}
-                                            </Button>
-                                        </div>
+                                        <CardArea props={recentBoard} />
                                     ))}
                                 </div>
                             )}
